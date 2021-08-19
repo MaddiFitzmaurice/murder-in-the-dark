@@ -14,12 +14,19 @@ public class GameManager : MonoBehaviour
     public bool isAiming;
 
     public UIManager uiManager;
+
     public LevelData[] levels;
+    public int currentLevel;
+
+    public GameObject target;
+    public GameObject barrierLong;
 
     // Start is called before the first frame update
     void Start()
     {
         uiManager = GetComponent<UIManager>();
+        
+        currentLevel = 1;
         StartGame();
     }
 
@@ -34,8 +41,27 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         isViewing = true;
         isAiming = false;
-        UpdateUI(1);
+        UpdateUI(currentLevel);
         StartCoroutine(ViewTargetsTimer());
+    }
+
+    // Setting up each level using data-oriented 
+    private void SetUpLevel()
+    {
+        // Instantiate targets
+        for (int i = 0; i < levels[currentLevel].numOfTargets; i++)
+        {
+            Instantiate(target, levels[currentLevel].targetPos[i], Quaternion.identity);
+        }
+
+        // Instantiate barriers if any
+        if (levels[currentLevel].numOfBarriers != 0)
+        {
+            for (int i = 0; i < levels[currentLevel].numOfBarriers; i++)
+            {
+                Instantiate(target, levels[currentLevel].barrierPos[i], Quaternion.identity);
+            }
+        }
     }
 
     // Viewing time for the player to see where the targets are

@@ -69,7 +69,12 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Target"))
         {
             Destroy(other.gameObject);
-            gameObject.SetActive(false);
+            if (GameObject.FindGameObjectsWithTag("Target") == null)
+            {
+                gameObject.SetActive(false);
+                gameManager.currentLevel++;
+                ResetKnife();
+            }
         }
         // If knife goes out of bounds, reset
         else if (other.gameObject.CompareTag("ResetKnife"))

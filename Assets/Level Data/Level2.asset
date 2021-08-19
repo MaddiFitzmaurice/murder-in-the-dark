@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ba1958a0f357ce4ab97d52f2d572735, type: 3}
-  m_Name: Level1
+  m_Name: Level2
   m_EditorClassIdentifier: 
   levelNumber: 1
   attemptToBeat: 1
   numOfTargets: 1
-  numOfBarriers: 0
+  numOfBarriers: 1
   targetPos:
   - {x: -4, y: 0.5, z: 1}
+  barrierPos:
+  - {x: -2.5, y: 0.5, z: -2}
