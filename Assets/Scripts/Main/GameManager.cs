@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public Text killCountText;
-    public Text attemptCountText;
     public GameObject murderLight;
     public Light worldLight;
 
@@ -15,36 +13,20 @@ public class GameManager : MonoBehaviour
     public bool isViewing;
     public bool isAiming;
 
-    public int killCount = 0;
-    public int attemptCount = 0;
-    public int level = 1;
+    public UIManager uiManager;
+    public LevelData[] levels;
 
     // Start is called before the first frame update
     void Start()
     {
+        uiManager = GetComponent<UIManager>();
         StartGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Will fix later
-        if (killCount == 1)
-        {
-            SceneManager.LoadScene("Main");
-        }
-    }
-
-    public void UpdateScore(int amount)
-    {
-        killCount += amount;
-        killCountText.text = "Kills: " + killCount;
-    }
-
-    public void UpdateAttempts(int amount)
-    {
-        attemptCount += amount;
-        attemptCountText.text = "Attempts: " + attemptCount;
+       
     }
 
     public void StartGame()
@@ -52,11 +34,11 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         isViewing = true;
         isAiming = false;
-        UpdateScore(0);
-        UpdateAttempts(0);
+        UpdateUI(1);
         StartCoroutine(ViewTargetsTimer());
     }
 
+    // Viewing time for the player to see where the targets are
     IEnumerator ViewTargetsTimer()
     {
         yield return new WaitForSeconds(3);
@@ -71,6 +53,13 @@ public class GameManager : MonoBehaviour
     public void ViewHint()
     {
         
-    }    
+    }
+
+    private void UpdateUI(int levelNum)
+    {
+        uiManager.UpdateAttemptsText(levelNum);
+        uiManager.UpdateLevelText(levels[levelNum - 1].levelNumber);
+        uiManager.UpdateToBeatText(levels[levelNum - 1].attemptToBeat);
+    }
 }
 
