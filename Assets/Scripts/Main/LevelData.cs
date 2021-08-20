@@ -9,6 +9,7 @@ public class LevelData : ScriptableObject
     public int attemptToBeat;
     public int numOfTargets;
     public int numOfBarriers;
+    public int viewingTime;
     public Vector3[] targetPos;
     public Vector3[] barrierPos;
 }

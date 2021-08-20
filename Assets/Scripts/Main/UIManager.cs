@@ -9,9 +9,9 @@ public class UIManager : MonoBehaviour
     public Text levelText;
     public Text toBeatText;
 
-    public void UpdateAttemptsText(int amount)
+    public void UpdateAttemptsText(int attemptNum)
     {
-        attemptsText.text = "Attempts\n" + amount; 
+        attemptsText.text = "Attempts\n" + attemptNum.ToString(); 
     }
 
     public void UpdateLevelText(int levelNum)

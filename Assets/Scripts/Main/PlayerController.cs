@@ -69,26 +69,22 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Target"))
         {
             Destroy(other.gameObject);
-            if (GameObject.FindGameObjectsWithTag("Target") == null)
-            {
-                gameObject.SetActive(false);
-                gameManager.currentLevel++;
-                ResetKnife();
-            }
         }
         // If knife goes out of bounds, reset
         else if (other.gameObject.CompareTag("ResetKnife"))
         {
-            gameManager.uiManager.UpdateAttemptsText(1);
+            gameManager.attemptNum++;
+            gameManager.uiManager.UpdateAttemptsText(gameManager.attemptNum);
+            gameManager.isAiming = true;
             ResetKnife();
         }
     }
 
     // Reset the position of the knife for relaunch
-    private void ResetKnife()
+    public void ResetKnife()
     {
-        gameManager.isAiming = true;
         transform.position = new Vector3(0, 0.5f, -5);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
         playerRb.velocity = Vector3.zero;
         playerRb.angularVelocity = Vector3.zero;
     }

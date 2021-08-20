@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba1958a0f357ce4ab97d52f2d572735, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  levelNumber: 1
+  levelNumber: 2
   attemptToBeat: 1
   numOfTargets: 1
   numOfBarriers: 1
+  viewingTime: 4
   targetPos:
   - {x: -4, y: 0.5, z: 1}
   barrierPos:

@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject murderLight;
-    public Light worldLight;
+    
+
+    private PlayerController player;
 
     public bool isGameActive;
     public bool isViewing;
@@ -16,8 +17,12 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
 
     public LevelData[] levels;
+    
     public int currentLevel;
+    public int attemptNum;
 
+    public Light worldLight;
+    public GameObject murderLight;
     public GameObject target;
     public GameObject barrierLong;
 
@@ -25,41 +30,63 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         uiManager = GetComponent<UIManager>();
+        player = FindObjectOfType<PlayerController>();
         
         currentLevel = 1;
-        StartGame();
+        StartLevel();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        // Advance to next level if all targets have been hit
+        if (GameObject.FindGameObjectsWithTag("Target").Length == 0)
+        {
+            // Check to see if reached end of game
+            if (currentLevel != levels.Length)
+            {
+                currentLevel++;
+                StartLevel();
+            }
+            // End game logic here
+            else
+            {
+                Debug.Log("You Win!");
+            }
+            
+        }
     }
 
-    public void StartGame()
+    // Initiate level start-up
+    public void StartLevel()
     {
+        player.ResetKnife();
+        attemptNum = 0;
         isGameActive = true;
         isViewing = true;
         isAiming = false;
-        UpdateUI(currentLevel);
+        worldLight.gameObject.SetActive(true);
+        murderLight.gameObject.SetActive(false);
+        UpdateUI();
+        SetUpLevel();
         StartCoroutine(ViewTargetsTimer());
     }
 
-    // Setting up each level using data-oriented 
+    // Set up level's targets and barriers using data-oriented design principles
     private void SetUpLevel()
     {
         // Instantiate targets
-        for (int i = 0; i < levels[currentLevel].numOfTargets; i++)
+        for (int i = 0; i < levels[currentLevel - 1].numOfTargets; i++)
         {
-            Instantiate(target, levels[currentLevel].targetPos[i], Quaternion.identity);
+            Instantiate(target, levels[currentLevel - 1].targetPos[i], Quaternion.identity);
         }
 
         // Instantiate barriers if any
-        if (levels[currentLevel].numOfBarriers != 0)
+        if (levels[currentLevel - 1].numOfBarriers != 0)
         {
-            for (int i = 0; i < levels[currentLevel].numOfBarriers; i++)
+            for (int i = 0; i < levels[currentLevel - 1].numOfBarriers; i++)
             {
-                Instantiate(target, levels[currentLevel].barrierPos[i], Quaternion.identity);
+                Instantiate(barrierLong, levels[currentLevel - 1].barrierPos[i], Quaternion.Euler(0, 90, 0));
             }
         }
     }
@@ -67,7 +94,7 @@ public class GameManager : MonoBehaviour
     // Viewing time for the player to see where the targets are
     IEnumerator ViewTargetsTimer()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(levels[currentLevel - 1].viewingTime);
         isViewing = false;
         isAiming = true;
         worldLight.gameObject.SetActive(false);
@@ -81,11 +108,11 @@ public class GameManager : MonoBehaviour
         
     }
 
-    private void UpdateUI(int levelNum)
+    private void UpdateUI()
     {
-        uiManager.UpdateAttemptsText(levelNum);
-        uiManager.UpdateLevelText(levels[levelNum - 1].levelNumber);
-        uiManager.UpdateToBeatText(levels[levelNum - 1].attemptToBeat);
+        uiManager.UpdateAttemptsText(attemptNum);
+        uiManager.UpdateLevelText(levels[currentLevel - 1].levelNumber);
+        uiManager.UpdateToBeatText(levels[currentLevel - 1].attemptToBeat);
     }
 }
 
