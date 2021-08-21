@@ -1073,16 +1073,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb250e363267a5a46867dc3e300158a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  murderLight: {fileID: 1265229507}
-  worldLight: {fileID: 705507994}
   isGameActive: 0
   isViewing: 0
   isAiming: 0
+  isTesting: 0
   uiManager: {fileID: 0}
   levels:
   - {fileID: 11400000, guid: ffe2901e809e9b44bb9184a812176f3c, type: 2}
   - {fileID: 11400000, guid: 65ec7554a36763944ba7f451aec6f199, type: 2}
+  - {fileID: 11400000, guid: a5dcea1bd61476e4cbd53acf1d5aeb72, type: 2}
+  - {fileID: 11400000, guid: 6c3b25611536db4439f56a71201c92e0, type: 2}
   currentLevel: 0
+  attemptNum: 0
+  worldLight: {fileID: 705507994}
+  murderLight: {fileID: 1265229507}
   target: {fileID: 8851396585999423570, guid: 6fa395902eba3254299fb63de4aa4884, type: 3}
   barrierLong: {fileID: 5764238344459687032, guid: d5737896a7b943a47bf2d176f9828c06, type: 3}
 --- !u!114 &976834486

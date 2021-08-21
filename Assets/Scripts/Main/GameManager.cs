@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    
-
     private PlayerController player;
 
     public bool isGameActive;
     public bool isViewing;
     public bool isAiming;
+    public bool isTesting;
 
     public UIManager uiManager;
 
@@ -31,9 +30,18 @@ public class GameManager : MonoBehaviour
     {
         uiManager = GetComponent<UIManager>();
         player = FindObjectOfType<PlayerController>();
-        
-        currentLevel = 1;
-        StartLevel();
+
+        if (!isTesting)
+        {
+            currentLevel = 1;
+            StartLevel();
+        }
+        // Used to test new levels
+        else
+        {
+            isGameActive = true;
+            isAiming = true;
+        }
     }
 
     // Update is called once per frame
@@ -60,6 +68,7 @@ public class GameManager : MonoBehaviour
     // Initiate level start-up
     public void StartLevel()
     {
+        ClearBarriers();
         player.ResetKnife();
         attemptNum = 0;
         isGameActive = true;
@@ -89,6 +98,19 @@ public class GameManager : MonoBehaviour
                 Instantiate(barrierLong, levels[currentLevel - 1].barrierPos[i], Quaternion.Euler(0, 90, 0));
             }
         }
+    }
+
+    private void ClearBarriers()
+    {
+        var barriers = GameObject.FindGameObjectsWithTag("Barrier");
+        if (barriers != null)
+        {
+            for (int i = barriers.Length - 1; i >= 0; i--)
+            {
+                Destroy(barriers[i]);
+            }
+        }
+        
     }
 
     // Viewing time for the player to see where the targets are
