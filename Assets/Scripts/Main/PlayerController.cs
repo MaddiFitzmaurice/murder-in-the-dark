@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float launchSpeed;
     [SerializeField] float spinSpeed;
 
-    private Vector3 murderLightOffset = new Vector3(0, 8, 0);
+    private Vector3 murderLightOffset = new Vector3(0, 8, 0.3f); 
 
     void Start()
     {
@@ -68,7 +68,9 @@ public class PlayerController : MonoBehaviour
         // If knife hits target
         if (other.gameObject.CompareTag("Target"))
         {
-            Destroy(other.gameObject);
+            // Delay level change so it's not abrupt
+            other.gameObject.transform.Translate(0, -10, 0);
+            Destroy(other.gameObject, 0.5f);
         }
         // If knife goes out of bounds, reset
         else if (other.gameObject.CompareTag("ResetKnife"))

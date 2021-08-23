@@ -6,7 +6,6 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     public int levelNumber;
-    public int attemptToBeat;
     public int numOfTargets;
     public int numOfBarriers;
     public int viewingTime;

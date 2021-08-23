@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public Text attemptsText;
     public Text levelText;
-    public Text toBeatText;
+    public Button hintButton;
 
     public void UpdateAttemptsText(int attemptNum)
     {
@@ -19,8 +19,8 @@ public class UIManager : MonoBehaviour
         levelText.text = "Level\n" + levelNum.ToString();
     }
 
-    public void UpdateToBeatText(int toBeat)
+    public void ViewHint(bool viewable)
     {
-        toBeatText.text = "To Beat\n" + toBeat.ToString();
+        hintButton.interactable = viewable;
     }
 }

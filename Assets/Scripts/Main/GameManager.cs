@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private PlayerController player;
-
     public bool isGameActive;
     public bool isViewing;
     public bool isAiming;
@@ -24,6 +22,13 @@ public class GameManager : MonoBehaviour
     public GameObject murderLight;
     public GameObject target;
     public GameObject barrierLong;
+
+    private PlayerController player;
+
+    private bool switchLight = false;
+    private bool hintViewable;
+
+    private int showHint = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +66,13 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("You Win!");
             }
-            
+        }
+
+        // If too many attempts, allow player option to view hint
+        if (attemptNum > showHint && !hintViewable)
+        {
+            uiManager.ViewHint(true);
+            hintViewable = true;
         }
     }
 
@@ -71,12 +82,12 @@ public class GameManager : MonoBehaviour
         ClearBarriers();
         player.ResetKnife();
         attemptNum = 0;
+        hintViewable = false;
         isGameActive = true;
         isViewing = true;
         isAiming = false;
-        worldLight.gameObject.SetActive(true);
-        murderLight.gameObject.SetActive(false);
-        UpdateUI();
+        SwitchLights(); // Turn on normal lights
+        StartLevelUI();
         SetUpLevel();
         StartCoroutine(ViewTargetsTimer());
     }
@@ -100,6 +111,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Clear up leftover barriers for next level
     private void ClearBarriers()
     {
         var barriers = GameObject.FindGameObjectsWithTag("Barrier");
@@ -110,7 +122,6 @@ public class GameManager : MonoBehaviour
                 Destroy(barriers[i]);
             }
         }
-        
     }
 
     // Viewing time for the player to see where the targets are
@@ -119,22 +130,36 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(levels[currentLevel - 1].viewingTime);
         isViewing = false;
         isAiming = true;
-        worldLight.gameObject.SetActive(false);
-        murderLight.gameObject.SetActive(true);
+        SwitchLights(); // Turn on murder lights
+        if (hintViewable)
+        {
+            uiManager.ViewHint(true);
+        }
     }
 
     // If the player has exceeded a certain amount of attempts,
     // Briefly show them the scene again.
     public void ViewHint()
     {
-        
+        isViewing = true;
+        isAiming = false;
+        uiManager.ViewHint(false);
+        SwitchLights(); // Turn on normal lights
+        StartCoroutine(ViewTargetsTimer());
     }
 
-    private void UpdateUI()
+    private void StartLevelUI()
     {
         uiManager.UpdateAttemptsText(attemptNum);
         uiManager.UpdateLevelText(levels[currentLevel - 1].levelNumber);
-        uiManager.UpdateToBeatText(levels[currentLevel - 1].attemptToBeat);
+        uiManager.ViewHint(false);
+    }
+
+    private void SwitchLights()
+    {
+        switchLight = !switchLight;
+        worldLight.gameObject.SetActive(switchLight);
+        murderLight.gameObject.SetActive(!switchLight);
     }
 }
 
