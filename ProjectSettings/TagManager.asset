@@ -7,6 +7,7 @@ TagManager:
   - Target
   - ResetKnife
   - Barrier
+  - Walls
   layers:
   - Default
   - TransparentFX

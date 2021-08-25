@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public ParticleSystem bloodSplatterVFX;
+
+    public AudioClip[] knifeSFX;
+    
     private Rigidbody playerRb;
     private GameManager gameManager;
+    private AudioSource knifeAudio;
 
     private float yRot;
     private float yRotBounds = 70.0f;
@@ -13,12 +18,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float launchSpeed;
     [SerializeField] float spinSpeed;
 
-    private Vector3 murderLightOffset = new Vector3(0, 8, 0.3f); 
+    private Vector3 murderLightOffset = new Vector3(0, 8, 0.3f);
+    private Vector3 sfxOffset = new Vector3(0, 0, -1f);
+
+    // Enum corresponds to order audio clips appear in AudioClip array 
+    enum AudioFiles {knifeDraw, knifeThrow, knifeHit, knifeBounce, knifeDrop };
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        knifeAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -39,6 +49,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gameManager.isAiming = false;
                     playerRb.AddForce(transform.forward * launchSpeed, ForceMode.Impulse);
+                    knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeThrow], 0.5f);
 
                     // Change spin direction based on angle of launch
                     if (yRot >= 0)
@@ -69,12 +80,17 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Target"))
         {
             // Delay level change so it's not abrupt
+            knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeHit], 0.5f);
+            var tempLoc = other.transform.position + sfxOffset;
+            bloodSplatterVFX.gameObject.transform.position = tempLoc;
+            bloodSplatterVFX.Play();
             other.gameObject.transform.Translate(0, -10, 0);
             Destroy(other.gameObject, 0.5f);
         }
         // If knife goes out of bounds, reset
         else if (other.gameObject.CompareTag("ResetKnife"))
         {
+            knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeDrop], 0.5f);
             gameManager.attemptNum++;
             gameManager.uiManager.UpdateAttemptsText(gameManager.attemptNum);
             gameManager.isAiming = true;
@@ -82,10 +98,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Play bounce audio
+        if (collision.gameObject.CompareTag("Walls") || collision.gameObject.CompareTag("Barrier"))
+        {
+            knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeBounce], 0.2f);
+        }
+    }
+
     // Reset the position of the knife for relaunch
     public void ResetKnife()
     {
-        transform.position = new Vector3(0, 0.5f, -5);
+        bloodSplatterVFX.Stop();
+        knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeDraw], 0.5f);
+        transform.position = new Vector3(0, 0.5f, -5.5f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         playerRb.velocity = Vector3.zero;
         playerRb.angularVelocity = Vector3.zero;
