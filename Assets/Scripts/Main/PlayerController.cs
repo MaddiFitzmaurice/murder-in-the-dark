@@ -79,7 +79,6 @@ public class PlayerController : MonoBehaviour
         // If knife hits target
         if (other.gameObject.CompareTag("Target"))
         {
-            // Delay level change so it's not abrupt
             knifeAudio.PlayOneShot(knifeSFX[(int)AudioFiles.knifeHit], 0.5f);
             var tempLoc = other.transform.position + sfxOffset;
             bloodSplatterVFX.gameObject.transform.position = tempLoc;

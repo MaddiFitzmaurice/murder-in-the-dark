@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
             // End game logic here
             else
             {
+                EndGame();
                 Debug.Log("You Win!");
             }
         }
@@ -146,6 +147,14 @@ public class GameManager : MonoBehaviour
         uiManager.ViewHint(false);
         SwitchLights(); // Turn on normal lights
         StartCoroutine(ViewTargetsTimer());
+    }
+
+    private void EndGame()
+    {
+        isGameActive = false;
+        uiManager.endGameScreen.SetActive(true);
+        murderLight.SetActive(false);
+        player.GetComponent<AudioSource>().Stop();
     }
 
     private void StartLevelUI()
