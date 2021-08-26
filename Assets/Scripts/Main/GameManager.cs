@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
         if (!isTesting)
         {
             currentLevel = 1;
-            StartLevel();
         }
         // Used to test new levels
         else
@@ -47,6 +46,7 @@ public class GameManager : MonoBehaviour
             isGameActive = true;
             isAiming = true;
         }
+        StartLevel();
     }
 
     // Update is called once per frame
@@ -166,9 +166,12 @@ public class GameManager : MonoBehaviour
 
     private void SwitchLights()
     {
-        switchLight = !switchLight;
-        worldLight.gameObject.SetActive(switchLight);
-        murderLight.gameObject.SetActive(!switchLight);
+        if (!isTesting)
+        {
+            switchLight = !switchLight;
+            worldLight.gameObject.SetActive(switchLight);
+            murderLight.gameObject.SetActive(!switchLight);
+        }
     }
 }
 

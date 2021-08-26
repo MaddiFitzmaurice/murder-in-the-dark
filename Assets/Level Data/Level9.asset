@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba1958a0f357ce4ab97d52f2d572735, type: 3}
+  m_Name: Level9
+  m_EditorClassIdentifier: 
+  levelNumber: 9
+  numOfTargets: 2
+  numOfBarriers: 2
+  viewingTime: 4
+  targetPos:
+  - {x: 0, y: 0.5, z: 3.6}
+  - {x: 0, y: 0.5, z: 0}
+  barrierPos:
+  - {x: 0, y: 0.4, z: 1}
+  - {x: 0, y: 0.4, z: -3}
