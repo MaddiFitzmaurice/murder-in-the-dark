@@ -11,17 +11,23 @@ public class UIManager : MonoBehaviour
 {
     public Text attemptsText;
     public Text levelText;
+    public Text highScoreText;
     public Button hintButton;
     public GameObject endGameScreen;
 
     public void UpdateAttemptsText(int attemptNum)
     {
-        attemptsText.text = "Attempts\n" + attemptNum.ToString(); 
+        attemptsText.text = "Attempt\n" + attemptNum.ToString(); 
     }
 
     public void UpdateLevelText(int levelNum)
     {
         levelText.text = "Level\n" + levelNum.ToString();
+    }
+
+    public void ShowLevelHighScore(int highScore)
+    {
+        highScoreText.text = "High\nScore\n" + highScore;
     }
 
     public void ViewHint(bool viewable)

@@ -25,16 +25,33 @@ public class GameManager : MonoBehaviour
 
     private PlayerController player;
 
+    private DataManager dataManager;
+    private bool dataManagerExists = false;
+
     private bool switchLight = false;
     private bool hintViewable;
 
     private int showHint = 3;
 
+    private void Awake()
+    {
+        // Check to see if Data Manager exists
+        if (FindObjectOfType<DataManager>())
+        {
+            dataManager = FindObjectOfType<DataManager>();
+            dataManagerExists = true;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
         uiManager = GetComponent<UIManager>();
         player = FindObjectOfType<PlayerController>();
+
+        if (dataManagerExists)
+        {
+            dataManager.LoadHighScores();
+        }
 
         if (!isTesting)
         {
@@ -45,6 +62,7 @@ public class GameManager : MonoBehaviour
         {
             isGameActive = true;
             isAiming = true;
+            dataManagerExists = false;
         }
         StartLevel();
     }
@@ -55,6 +73,15 @@ public class GameManager : MonoBehaviour
         // Advance to next level if all targets have been hit
         if (GameObject.FindGameObjectsWithTag("Target").Length == 0)
         {
+            if (dataManagerExists)
+            {
+                // If attempt number beats previous high score for level, update
+                if (attemptNum < dataManager.levelHS[currentLevel - 1] || dataManager.levelHS[currentLevel - 1] == 0)
+                {
+                    dataManager.levelHS[currentLevel - 1] = attemptNum;
+                    dataManager.SaveHighScores();
+                }
+            }
             // Check to see if reached end of game
             if (currentLevel != levels.Length)
             {
@@ -65,7 +92,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 EndGame();
-                Debug.Log("You Win!");
             }
         }
 
@@ -82,7 +108,7 @@ public class GameManager : MonoBehaviour
     {
         ClearBarriers();
         player.ResetKnife();
-        attemptNum = 0;
+        attemptNum = 1;
         hintViewable = false;
         isGameActive = true;
         isViewing = true;
@@ -155,6 +181,10 @@ public class GameManager : MonoBehaviour
         uiManager.endGameScreen.SetActive(true);
         murderLight.SetActive(false);
         player.GetComponent<AudioSource>().Stop();
+        if (dataManagerExists)
+        {
+            dataManager.SaveHighScores();
+        }
     }
 
     private void StartLevelUI()
@@ -162,6 +192,10 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateAttemptsText(attemptNum);
         uiManager.UpdateLevelText(levels[currentLevel - 1].levelNumber);
         uiManager.ViewHint(false);
+        if (dataManagerExists)
+        {
+            uiManager.ShowLevelHighScore(dataManager.levelHS[currentLevel - 1]);
+        }
     }
 
     private void SwitchLights()
